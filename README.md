@@ -52,7 +52,7 @@ Overwrite pyod version to avoid bugs
 pip install pyod==2.0.1
 ```
 
-## Reproduce our experimental results  
+## Rerun our experiments
 
 1. Download the following datasets from Kaggle and put them to ``data/[dataset_name]/``
    - [vifd](https://www.kaggle.com/datasets/khusheekapoor/vehicle-insurance-fraud-detection/data) (Vehicle Insurance Fraud Detection)  
@@ -68,11 +68,11 @@ pip install pyod==2.0.1
    bash scripts/exp4-model_size/run_anollm_1.7B_odds.sh
    ```
 
-### Using your own dataset
+## Using your own datasets
 
 To use a custom dataset, create a dataframe with the following structure: ``{feature_name:feature_values}``. Please refer to ``load_dataset()`` function in ``src/data_utils.py`` for further guidance.
 
-## Training Models
+### Training Models
 
 For AnoLLM, we use the following command:
 
@@ -87,9 +87,15 @@ For baselines, we use the following command:
 CUDA_VISIBLE_DEVICES=0 python evaluate_baselines.py --dataset $dataset --n_splits $n_splits --normalize  --setting  semi_supervised --split_idx $split_idx 
 ```
 
-Check the argument parser in ``train_anollm.py`` for options for datasets 
+Check the argument parser in ``evaluate_baselines.py`` for options for datasets 
 
-## Evaluation
+### Evaluation
+
+To evaluate AnoLLM, we use the following command:
+```
+CUDA_VISIBLE_DEVICES=$INFERENCE_GPUS  torchrun --nproc_per_node=$n_test_node evaluate_anollm.py --dataset $dataset --n_splits $n_splits --split_idx 0  --setting semi_supervised --batch_size $eval_batch_size  --n_permutations $n_permutations --model $model --binning standard  
+``` 
+
 We evaluate the quality of synthetic data using metrics from various aspects.
 ```
 python src/get_results.py --dataset $dataset --n_splits $n_splits --setting semi_supervised
