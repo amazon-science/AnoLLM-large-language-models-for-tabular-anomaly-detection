@@ -36,7 +36,7 @@ def get_args():
     parser.add_argument("--dataset", type = str, default='wine', choices = [d.lower() for d in DATA_MAP.keys()],
                     help="Name of datasets in the ODDS benchmark")
     parser.add_argument("--exp_dir", type = str, default=None)
-    parser.add_argument("--setting", type = str, default='semi_supervised', choices = ['semi_supervised', 'unsupervised'])
+    parser.add_argument("--setting", type = str, default='semi_supervised', choices = ['semi_supervised', 'unsupervised'], help="semi_supervised:an uncontaminated, unsupervised setting; unsupervised:a contaminated, unsupervised setting")
     parser.add_argument("--normalize", action='store_true', default=False) #normalize the numerical features to have zero mean and unit variance 
     parser.add_argument("--text_encoding", type = str, default='word2vec', choices = ['tfidf', 'word2vec', 'bag_of_words'])
     #dataset hyperparameters

@@ -18,7 +18,7 @@ def get_args():
 	parser.add_argument("--dataset", type = str, default='wine', choices = [d.lower() for d in DATA_MAP.keys()],
 					help="Name of datasets in the ODDS benchmark")
 	parser.add_argument("--exp_dir", type = str, default=None)
-	parser.add_argument("--setting", type = str, default='semi_supervised', choices = ['semi_supervised', 'unsupervised'])
+	parser.add_argument("--setting", type = str, default='semi_supervised', choices = ['semi_supervised', 'unsupervised'], help="semi_supervised:an uncontaminated, unsupervised setting; unsupervised:a contaminated, unsupervised setting")
 	
 	#dataset hyperparameters
 	parser.add_argument("--data_dir", type = str, default='data')
