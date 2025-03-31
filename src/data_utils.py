@@ -459,7 +459,7 @@ def load_dataset(dataset_name, data_dir):
 		for npz_file in os.listdir(dataset_root):
 			if npz_file.startswith(str(n) + '_'):
 				print(dataset_name, npz_file)
-				data = np.load(dataset_root / npz_file, allow_pickle=True)
+				data = np.load(dataset_root / npz_file, allow_pickle=False)
 				break
 		else: 
 			ValueError('{} is not found.'.format(dataset_name))
@@ -482,11 +482,11 @@ def load_adbench_data(dataset):
 		Utils().download_datasets(repo='jihulab')
 	
 	if dataset == 'cardio':
-		return np.load(dataset_root / '6_cardio.npz', allow_pickle=True)
+		return np.load(dataset_root / '6_cardio.npz', allow_pickle=False)
 
 	for npz_file in os.listdir(dataset_root):
 		if dataset in npz_file.lower():
-			return np.load(dataset_root / npz_file, allow_pickle=True)
+			return np.load(dataset_root / npz_file, allow_pickle=False)
 	else: 
 		ValueError('{} is not found.'.format(dataset))
 

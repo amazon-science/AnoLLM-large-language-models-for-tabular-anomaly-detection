@@ -22,6 +22,7 @@ from anollm.anollm_trainer import AnoLLMTrainer
 from anollm.anollm_utils import _array_to_dataframe
 from anollm.anollm_dataset import AnoLLMDataset, AnoLLMDataCollator
 
+from safetensors.torch import save_model, load_model
 
 class AnoLLM:
 	"""AnoLLM Class
@@ -265,7 +266,7 @@ class AnoLLM:
 				shift_attention_mask_batch = attn_mask[..., 1:].contiguous()
 
 				if feature_wise:
-					score_batch = (loss_fct(shift_logits.transpose(1, 2), shift_labels) * shift_attention_mask_batch).cpu().numpy() # batch * (ori_seq_len -1)
+					score_batch = (loss_fct(shift_logits.transpose(1, 2), shift_labels) * shift_attention_mask_batch).cpu().to(torch.float32).numpy() # batch * (ori_seq_len -1)
 
 					for i in range(len(encoded_batch)):
 						for j in range(n_col): 
@@ -274,7 +275,7 @@ class AnoLLM:
 							col_idx = col_indices_batch[i][j]
 							anomaly_scores[start_idx+i, col_idx, perm_idx] = score_batch[i, start_pos:end_pos].sum()
 				elif len(self.textual_columns) > 0:
-					score_batch = (loss_fct(shift_logits.transpose(1, 2), shift_labels) * shift_attention_mask_batch).cpu().numpy() # batch * (ori_seq_len -1)
+					score_batch = (loss_fct(shift_logits.transpose(1, 2), shift_labels) * shift_attention_mask_batch).cpu().to(torch.float32).numpy() # batch * (ori_seq_len -1)
 					for i in range(len(encoded_batch)):
 						score_single = 0
 						for j in range(n_col): 
@@ -287,7 +288,7 @@ class AnoLLM:
 								score_single += score_batch[i, start_pos:end_pos].sum()
 						anomaly_scores[start_idx+i, perm_idx] = score_single
 				else:
-					score_batch = (loss_fct(shift_logits.transpose(1, 2), shift_labels) * shift_attention_mask_batch).sum(1) # remove normalization
+					score_batch = (loss_fct(shift_logits.transpose(1, 2), shift_labels) * shift_attention_mask_batch).to(torch.float32).sum(1) # remove normalization
 					anomaly_scores[start_idx:end_idx, perm_idx] = score_batch.cpu().numpy()
 				start_idx = end_idx
 
@@ -309,13 +310,8 @@ class AnoLLM:
 		else:
 			os.mkdir(directory)
 
-		state_dict = self.model.state_dict()
-		new_state_dict = OrderedDict()
-		for k, v in state_dict.items():
-			name = k[7:]  # remove `module.`
-			new_state_dict[name] = v
-		# Save the model with the modified state dict
-		torch.save(new_state_dict, path)
+		model_to_save = self.model.module
+		save_model(model_to_save, path)
 	
 	def load_from_state_dict(self, path: str):
 		"""Load AnoLLM model from state_dict
@@ -323,10 +319,5 @@ class AnoLLM:
 		Args:
 			path: path where AnoLLM model is saved
 		"""
-		
-		if self.efficient_finetuning == 'lora':
-			self.model.to('cpu')
-			state_dict = torch.load(path, map_location=torch.device('cpu'))
-			self.model.load_state_dict(state_dict)
-		else:
-			self.model.load_state_dict(torch.load(path))
+		load_model(self.model, path)
+

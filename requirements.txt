@@ -7,9 +7,9 @@ pandas==2.2.2
 scikit_learn==1.6.1
 scipy==1.13.1
 tqdm==4.66.4
-transformers==4.42.3
 ucimlrepo==0.0.7
 peft==0.11.1
 datasets==2.20.0
 wandb==0.17.4
 tf-keras==2.16.0
+transformers==4.48.2

@@ -18,7 +18,6 @@ for model in 'smol' 'smol-360'; do
                                                     --batch_size $batch_size --model $model --binning standard  --wandb
         CUDA_VISIBLE_DEVICES=$INFERENCE_GPUS torchrun --nproc_per_node=$n_test_node evaluate_anollm.py --dataset $dataset --n_splits $n_splits --split_idx 0  --setting $setting\
                                                 --batch_size $eval_batch_size  --n_permutations $n_permutations --model $model --binning standard   
-        exit
         wandb offline
         for ((split_idx = 1 ; split_idx < $n_splits ; split_idx++ )); do    
             CUDA_VISIBLE_DEVICES=$TRAIN_GPUS torchrun --nproc_per_node=$n_train_node train_anollm.py --dataset $dataset --n_splits $n_splits --split_idx $split_idx  --setting $setting --max_steps 2000\
