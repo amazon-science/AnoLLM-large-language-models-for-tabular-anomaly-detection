@@ -4,7 +4,7 @@
   <a href="https://github.com/amazon-science/tabsyn/blob/main/LICENSE">
     <img alt="GitHub License" src="https://img.shields.io/badge/license-Apache 2.0-green">
   </a>
-  <a href="https://openreview.net/forum?id=4Ay23yeuz0">
+  <a href="https://openreview.net/forum?id=7VkHffT5X2">
     <img alt="Openreview" src="https://img.shields.io/badge/review-OpenReview-red">
   </a>
 </p>
