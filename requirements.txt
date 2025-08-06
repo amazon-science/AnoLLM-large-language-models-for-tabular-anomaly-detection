@@ -12,4 +12,4 @@ peft==0.11.1
 datasets==2.20.0
 wandb==0.17.4
 tf-keras==2.16.0
-transformers==4.48.2
+transformers==4.53.0
